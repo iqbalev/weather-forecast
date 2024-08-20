@@ -1,0 +1,34 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: "Urbanist", sans-serif;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.location-search-input {
+  padding: 10px 20px;
+  font-family: inherit;
+}
+
+.search-button {
+  padding: 10px;
+}
+
+.measurement-unit-selector {
+  padding: 10px 20px;
+}
+
+main {
+  padding: 20px;
+}
