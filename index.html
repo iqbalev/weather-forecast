@@ -21,7 +21,7 @@
   </head>
   <body>
     <header>
-      <h1>WeatherApp</h1>
+      <h1>WeatherForecast</h1>
       <form class="location-search-form">
         <input
           type="search"
@@ -29,16 +29,34 @@
           class="location-search-input"
           placeholder="Enter location"
         />
-        <button type="submit" class="search-button">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
         <select class="measurement-unit-selector">
           <option value="metric">Metric</option>
           <option value="uk">UK Standard</option>
           <option value="us">US Standard</option>
         </select>
+        <button type="submit" class="search-button">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
       </form>
     </header>
+    <main>
+      <section class="current-weather-container">
+        <h2 class="current-weather-title">Current Weather</h2>
+        <div class="current-weather-dashboard">
+          <div class="current-weather left">
+            <h3 class="location"></h3>
+            <h3 class="conditions"></h3>
+            <img class="weather-icon" />
+          </div>
+          <div class="current-weather right">
+            <h4 class="timezone"></h4>
+            <h4 class="temp"></h4>
+            <h4 class="humidity"></h4>
+            <h4 class="description"></h4>
+          </div>
+        </div>
+      </section>
+    </main>
     <script src="script.js"></script>
   </body>
 </html>
