@@ -41,7 +41,7 @@ const getWeatherData = async () => {
   const conditions = weatherData.currentConditions.conditions;
   const humidity = weatherData.currentConditions.humidity;
   const icon = weatherData.currentConditions.icon;
-  const temp = weatherData.currentConditions.temp;
+  const temperature = weatherData.currentConditions.temp;
 
   return {
     location,
@@ -50,7 +50,7 @@ const getWeatherData = async () => {
     conditions,
     humidity,
     icon,
-    temp,
+    temperature,
   };
 };
 
@@ -123,8 +123,8 @@ const displayWeatherData = async (weatherData) => {
   const humidity = document.querySelector(".humidity");
   humidity.textContent = `Humidity: ${weatherData.humidity}`;
 
-  const temp = document.querySelector(".temp");
-  temp.textContent = `Temperature: ${weatherData.temp}`;
+  const temperature = document.querySelector(".temperature");
+  temperature.textContent = weatherData.temperature;
 };
 
 const locationSearchForm = document.querySelector(".location-search-form");
