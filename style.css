@@ -8,29 +8,35 @@ body {
   color: rgb(255, 255, 255);
   background-color: rgb(40, 40, 40);
   font-family: "Urbanist", sans-serif;
-  display: flex;
-  flex-direction: column;
 }
 
 header {
   display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
   justify-content: space-between;
+  align-items: center;
   padding: 20px;
 }
 
 .location-search-input,
-.search-button,
-.measurement-unit-selector {
+.measurement-unit-selector,
+.search-button {
   color: rgb(255, 255, 255);
-  background-color: rgba(60, 60, 60);
+  background-color: rgb(60, 60, 60);
   border: transparent;
   border-radius: 5px;
 }
 
 .location-search-input,
 .measurement-unit-selector {
-  padding: 10px 20px;
   font-family: inherit;
+  padding: 10px 20px;
+}
+
+.measurement-unit-selector,
+.search-button {
+  cursor: pointer;
 }
 
 .search-button {
@@ -42,8 +48,7 @@ main {
 }
 
 .current-weather-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 10px;
   padding: 20px;
   border: 2px solid rgb(70, 70, 70);
@@ -52,39 +57,30 @@ main {
 
 .current-weather-dashboard {
   background-color: rgb(50, 50, 50);
-  display: flex;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
   gap: 20px;
   padding: 20px;
   border: transparent;
   border-radius: 5px;
 }
 
-.current-weather {
-  background-color: rgba(60, 60, 60);
-  display: flex;
-  flex-direction: column;
+.current-weather-card {
+  background-color: rgb(60, 60, 60);
   padding: 20px;
   border: transparent;
   border-radius: 5px;
 }
 
-.current-weather.left {
-  flex: 1;
-}
-
-.current-weather.right {
-  flex: 2;
-}
-
 .location,
+.temperature,
 .conditions,
-.timezone,
-.temp,
 .humidity,
+.timezone,
 .description {
   font-weight: normal;
 }
 
 .weather-icon {
-  width: 300px;
+  width: 200px;
 }
