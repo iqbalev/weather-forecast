@@ -27,12 +27,12 @@
           type="search"
           name="location"
           class="location-search-input"
-          placeholder="Enter location"
+          placeholder="Search location"
         />
         <select class="measurement-unit-selector">
-          <option value="metric">Metric (<span>&deg;C</span>, km/h)</option>
-          <option value="uk">UK (<span>&deg;C</span>, mph)</option>
-          <option value="us">US (<span>&deg;F</span>, mph)</option>
+          <option value="metric">Metric (°C, km/h)</option>
+          <option value="uk">UK (°C, mph)</option>
+          <option value="us">US (°F, mph)</option>
         </select>
         <button type="submit" class="search-button">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -44,6 +44,7 @@
         <h2 class="current-weather-title">Current Weather</h2>
         <div class="current-weather-dashboard">
           <div class="current-weather-card left">
+            <h3 class="day-month-year"><h3/>
             <h3 class="location"></h3>
             <h3 class="temperature"></h3>
             <h3 class="conditions"></h3>
@@ -51,10 +52,18 @@
           </div>
           <div class="current-weather-card right">
             <h3 class="humidity"></h3>
+            <h3 class="wind-speed"></h3>
+            <h3 class="date-time"></h3>
+            <h3 class="sunrise"></h3>
+            <h3 class="sunset"></h3>
             <h3 class="timezone"></h3>
             <h3 class="description"></h3>
           </div>
         </div>
+      </section>
+      <section class="forecast-container">
+        <h2 class="forecast-title">Two Weeks Forecast</h2>
+        <div class="forecast-dashboard"></div>
       </section>
     </main>
     <script src="script.js"></script>
