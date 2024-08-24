@@ -44,10 +44,14 @@ header {
 }
 
 main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   padding: 20px;
 }
 
-.current-weather-container {
+.current-weather-container,
+.forecast-container {
   display: grid;
   gap: 10px;
   padding: 20px;
@@ -67,15 +71,21 @@ main {
 
 .current-weather-card {
   background-color: rgb(60, 60, 60);
+  line-height: 1.5;
   padding: 20px;
   border: transparent;
   border-radius: 5px;
 }
 
+.day-month-year,
 .location,
 .temperature,
 .conditions,
 .humidity,
+.wind-speed,
+.date-time,
+.sunrise,
+.sunset,
 .timezone,
 .description {
   font-weight: normal;
@@ -83,4 +93,18 @@ main {
 
 .weather-icon {
   width: 200px;
+}
+
+.forecast-dashboard {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+.forecast-card {
+  background-color: rgb(60, 60, 60);
+  padding: 20px;
+  border: transparent;
+  border-radius: 5px;
 }
