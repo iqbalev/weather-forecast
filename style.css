@@ -8,8 +8,11 @@ body {
   color: rgb(255, 255, 255);
   background-color: rgb(40, 40, 40);
   font-family: "Urbanist", sans-serif;
+  display: flex;
+  flex-direction: column;
 }
 
+/* Header Styling */
 header {
   display: flex;
   flex-wrap: wrap;
@@ -43,6 +46,7 @@ header {
   padding: 10px;
 }
 
+/* Main Styling */
 main {
   display: flex;
   flex-direction: column;
@@ -59,22 +63,34 @@ main {
   border-radius: 5px;
 }
 
-.current-weather-dashboard {
+.current-weather-dashboard,
+.forecast-dashboard {
   background-color: rgb(50, 50, 50);
   display: grid;
-  grid-template-columns: 2fr 3fr;
   gap: 20px;
   padding: 20px;
   border: transparent;
   border-radius: 5px;
 }
 
-.current-weather-card {
+.current-weather-dashboard {
+  grid-template-columns: 2fr 3fr;
+}
+
+.forecast-dashboard {
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.current-weather-card,
+.forecast-card {
   background-color: rgb(60, 60, 60);
-  line-height: 1.5;
   padding: 20px;
   border: transparent;
   border-radius: 5px;
+}
+
+.current-weather-card {
+  line-height: 1.5;
 }
 
 .day-month-year,
@@ -93,18 +109,4 @@ main {
 
 .weather-icon {
   width: 200px;
-}
-
-.forecast-dashboard {
-  display: grid;
-  grid-template-rows: repeat(2, 1fr);
-  grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
-}
-
-.forecast-card {
-  background-color: rgb(60, 60, 60);
-  padding: 20px;
-  border: transparent;
-  border-radius: 5px;
 }
