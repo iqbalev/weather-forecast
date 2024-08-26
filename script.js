@@ -23,17 +23,15 @@ const updateMeasurementUnit = () => {
   const measurementUnitSelector = document.querySelector(
     ".measurement-unit-selector"
   );
-  return (measurementUnit = measurementUnitSelector.value);
+  measurementUnit = measurementUnitSelector.value;
 };
 
 const setDegreeSymbol = () => {
-  const measurementUnit = updateMeasurementUnit();
   const degreeSymbol = measurementUnit === "us" ? "°F" : "°C";
   return degreeSymbol;
 };
 
 const setSpeedUnit = () => {
-  const measurementUnit = updateMeasurementUnit();
   const speedUnit = measurementUnit === "metric" ? "km/h" : "mph";
   return speedUnit;
 };
@@ -107,7 +105,7 @@ const setWeatherIcon = (weatherData) => {
 
 const displayCurrentDate = () => {
   const currentDate = new Date();
-  const dayOfWeeks = [
+  const daysOfTheWeek = [
     "Sunday",
     "Monday",
     "Tuesday",
@@ -116,9 +114,25 @@ const displayCurrentDate = () => {
     "Friday",
     "Saturday",
   ];
-  const todayDay = dayOfWeeks[currentDate.getDay()];
+
+  const monthsOfTheYear = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const todayDay = daysOfTheWeek[currentDate.getDay()];
   const todayDate = currentDate.getDate();
-  const todayMonth = currentDate.getMonth();
+  const todayMonth = monthsOfTheYear[currentDate.getMonth()];
   const todayYear = currentDate.getFullYear();
 
   const dayMonthYear = document.querySelector(".day-month-year");
@@ -159,39 +173,42 @@ const displayCurrentWeather = async (weatherData) => {
   sunset.innerHTML = `Sunset: ${weatherData.sunset}`;
 };
 
-const resetForecastCards = () => {
+const resetForecastDashboard = () => {
   const forecastDashboard = document.querySelector(".forecast-dashboard");
   forecastDashboard.innerHTML = "";
 };
 
-const generateForecastCards = () => {
+const displayAndGenerateForecasts = async (weatherData) => {
   const forecastDashboard = document.querySelector(".forecast-dashboard");
 
-  for (let i = 0; i < 10; i++) {
-    const forecastCard = document.createElement("div");
-    forecastCard.classList.add("forecast-card");
-    forecastCard.innerHTML = "TEST";
-    forecastDashboard.appendChild(forecastCard);
-  }
+  weatherData.days.forEach((day, index) => {
+    if (index > 0 && index < 15) {
+      const forecastCard = document.createElement("div");
+      forecastCard.classList.add("forecast-card");
+
+      const dateTime = document.createElement("h3");
+      dateTime.classList.add("date-time");
+      dateTime.innerHTML = day.datetime;
+
+      const temperature = document.createElement("h3");
+      temperature.classList.add("temperature");
+      const degreeSymbol = setDegreeSymbol();
+      temperature.innerHTML = `${day.temp} ${degreeSymbol}`;
+
+      const conditions = document.createElement("h3");
+      conditions.classList.add("conditions");
+      conditions.innerHTML = day.conditions;
+
+      forecastCard.appendChild(dateTime);
+      forecastCard.appendChild(temperature);
+      forecastCard.appendChild(conditions);
+
+      forecastDashboard.appendChild(forecastCard);
+    }
+  });
 };
 
-const displayForecasts = async (weatherData) => {
-  console.log(weatherData.days);
-};
-
-const loadDefaultState = async () => {
-  const weatherData = await prepareWeatherData();
-  displayCurrentDate();
-  setWeatherIcon(weatherData);
-  displayCurrentWeather(weatherData);
-  generateForecastCards();
-  displayForecasts(weatherData);
-};
-
-document.addEventListener("DOMContentLoaded", loadDefaultState);
-
-const locationSearchForm = document.querySelector(".location-search-form");
-locationSearchForm.addEventListener("submit", async (event) => {
+const handleFormSubmit = async (event) => {
   event.preventDefault();
   updateMeasurementUnit();
   updateSearchLocation();
@@ -199,7 +216,19 @@ locationSearchForm.addEventListener("submit", async (event) => {
   displayCurrentDate();
   setWeatherIcon(weatherData);
   displayCurrentWeather(weatherData);
-  resetForecastCards();
-  generateForecastCards();
-  displayForecasts(weatherData);
-});
+  resetForecastDashboard();
+  displayAndGenerateForecasts(weatherData);
+};
+
+const loadDefaultState = async () => {
+  const weatherData = await prepareWeatherData();
+  displayCurrentDate();
+  setWeatherIcon(weatherData);
+  displayCurrentWeather(weatherData);
+  displayAndGenerateForecasts(weatherData);
+};
+
+const locationSearchForm = document.querySelector(".location-search-form");
+locationSearchForm.addEventListener("submit", handleFormSubmit);
+
+document.addEventListener("DOMContentLoaded", loadDefaultState);
