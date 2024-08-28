@@ -3,20 +3,30 @@ let measurementUnit = "metric";
 const apiKey = "G8796BZ69XEMGGGRH42HX5RSQ";
 
 const fetchWeatherData = async (searchLocation, measurementUnit) => {
+  displayLoaderAndHideContent();
+
   try {
     const response = await fetch(
       `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${searchLocation}?unitGroup=${measurementUnit}&key=${apiKey}`
     );
 
     if (response.status !== 200) {
-      console.log(`Response Status: ${response.status}`);
+      throw new Error(`Unexpected response status: ${response.status}`);
     }
     const weatherData = await response.json();
     console.log(weatherData);
     return weatherData;
   } catch (error) {
-    console.log(error);
+    console.error(`Error fetching weather data. ${error.message}`);
+    return null;
+  } finally {
+    displayContentAndHideLoader();
   }
+};
+
+const updateSearchLocation = () => {
+  const locationSearchInput = document.querySelector(".location-search-input");
+  searchLocation = locationSearchInput.value;
 };
 
 const updateMeasurementUnit = () => {
@@ -31,45 +41,64 @@ const setDegreeSymbol = () => {
   return degreeSymbol;
 };
 
+const setPressureUnit = () => {
+  const pressureUnit = measurementUnit === "metric" ? "hPa" : "mbar";
+  return pressureUnit;
+};
+
+const setDistanceUnit = () => {
+  const distanceUnit = measurementUnit === "metric" ? "km" : "mi";
+  return distanceUnit;
+};
+
 const setSpeedUnit = () => {
   const speedUnit = measurementUnit === "metric" ? "km/h" : "mph";
   return speedUnit;
 };
 
-const updateSearchLocation = () => {
-  const locationSearchInput = document.querySelector(".location-search-input");
-  searchLocation = locationSearchInput.value;
+const displayLoaderAndHideContent = () => {
+  const main = document.querySelector(".main");
+  main.style.display = "none";
+
+  const loaderContainer = document.querySelector(".loader-container");
+  loaderContainer.style.display = "flex";
 };
 
 const prepareWeatherData = async () => {
   const weatherData = await fetchWeatherData(searchLocation, measurementUnit);
 
-  const location = weatherData.resolvedAddress;
-  const timezone = weatherData.timezone;
+  const resolvedAddress = weatherData.resolvedAddress;
   const description = weatherData.description;
+  const days = weatherData.days;
   const conditions = weatherData.currentConditions.conditions;
   const dateTime = weatherData.currentConditions.datetime;
+  const dew = weatherData.currentConditions.dew;
+  const feelsLike = weatherData.currentConditions.feelslike;
   const humidity = weatherData.currentConditions.humidity;
   const icon = weatherData.currentConditions.icon;
-  const temperature = weatherData.currentConditions.temp;
+  const pressure = weatherData.currentConditions.pressure;
+  const temp = weatherData.currentConditions.temp;
+  const visibility = weatherData.currentConditions.visibility;
   const windSpeed = weatherData.currentConditions.windspeed;
   const sunrise = weatherData.currentConditions.sunrise;
   const sunset = weatherData.currentConditions.sunset;
-  const days = weatherData.days;
 
   return {
-    location,
-    timezone,
+    resolvedAddress,
     description,
+    days,
     conditions,
     dateTime,
+    dew,
+    feelsLike,
     humidity,
     icon,
-    temperature,
+    pressure,
+    temp,
+    visibility,
     windSpeed,
     sunrise,
     sunset,
-    days,
   };
 };
 
@@ -141,10 +170,7 @@ const displayCurrentDate = () => {
 
 const displayCurrentWeather = async (weatherData) => {
   const location = document.querySelector(".location");
-  location.innerHTML = weatherData.location;
-
-  const timezone = document.querySelector(".timezone");
-  timezone.innerHTML = `Timezone: ${weatherData.timezone}`;
+  location.innerHTML = weatherData.resolvedAddress;
 
   const description = document.querySelector(".description");
   description.innerHTML = weatherData.description;
@@ -153,24 +179,38 @@ const displayCurrentWeather = async (weatherData) => {
   conditions.innerHTML = weatherData.conditions;
 
   const dateTime = document.querySelector(".date-time");
-  dateTime.innerHTML = `Time: ${weatherData.dateTime}`;
+  dateTime.innerHTML = weatherData.dateTime;
+
+  const dewPoint = document.querySelector(".dew-point");
+  const degreeSymbol = setDegreeSymbol();
+  dewPoint.innerHTML = `${weatherData.dew} ${degreeSymbol}`;
+
+  const feelsLike = document.querySelector(".feels-like");
+  feelsLike.innerHTML = `${weatherData.feelsLike} ${degreeSymbol}`;
 
   const humidity = document.querySelector(".humidity");
-  humidity.innerHTML = `Humidity: ${weatherData.humidity}%`;
+  humidity.innerHTML = `${weatherData.humidity}%`;
+
+  const pressure = document.querySelector(".pressure");
+  const pressureUnit = setPressureUnit();
+  pressure.innerHTML = `${weatherData.pressure} ${pressureUnit}`;
 
   const temperature = document.querySelector(".temperature");
-  const degreeSymbol = setDegreeSymbol();
-  temperature.innerHTML = `${weatherData.temperature} ${degreeSymbol}`;
+  temperature.innerHTML = `${weatherData.temp} ${degreeSymbol}`;
+
+  const visibility = document.querySelector(".visibility");
+  const distanceUnit = setDistanceUnit();
+  visibility.innerHTML = `${weatherData.visibility} ${distanceUnit}`;
 
   const windSpeed = document.querySelector(".wind-speed");
   const speedUnit = setSpeedUnit();
-  windSpeed.innerHTML = `Wind Speed: ${weatherData.windSpeed} ${speedUnit}`;
+  windSpeed.innerHTML = `${weatherData.windSpeed} ${speedUnit}`;
 
   const sunrise = document.querySelector(".sunrise");
-  sunrise.innerHTML = `Sunrise: ${weatherData.sunrise}`;
+  sunrise.innerHTML = weatherData.sunrise;
 
   const sunset = document.querySelector(".sunset");
-  sunset.innerHTML = `Sunset: ${weatherData.sunset}`;
+  sunset.innerHTML = weatherData.sunset;
 };
 
 const resetForecastDashboard = () => {
@@ -186,18 +226,18 @@ const displayAndGenerateForecasts = async (weatherData) => {
       const forecastCard = document.createElement("div");
       forecastCard.classList.add("forecast-card");
 
-      const dateTime = document.createElement("h3");
+      const dateTime = document.createElement("h4");
       dateTime.classList.add("date-time");
-      dateTime.innerHTML = day.datetime;
+      dateTime.innerHTML = `<i class="fa-regular fa-calendar"></i> - ${day.datetime}`;
 
-      const temperature = document.createElement("h3");
+      const temperature = document.createElement("h4");
       temperature.classList.add("temperature");
       const degreeSymbol = setDegreeSymbol();
-      temperature.innerHTML = `${day.temp} ${degreeSymbol}`;
+      temperature.innerHTML = `<i class="fa-solid fa-temperature-half"></i> - ${day.temp} ${degreeSymbol}`;
 
-      const conditions = document.createElement("h3");
+      const conditions = document.createElement("h4");
       conditions.classList.add("conditions");
-      conditions.innerHTML = day.conditions;
+      conditions.innerHTML = `<i class="fa-solid fa-cloud"></i> - ${day.conditions}`;
 
       forecastCard.appendChild(dateTime);
       forecastCard.appendChild(temperature);
@@ -208,16 +248,25 @@ const displayAndGenerateForecasts = async (weatherData) => {
   });
 };
 
+const displayContentAndHideLoader = () => {
+  const loaderContainer = document.querySelector(".loader-container");
+  loaderContainer.style.display = "none";
+
+  const main = document.querySelector(".main");
+  main.style.display = "flex";
+};
+
 const handleFormSubmit = async (event) => {
   event.preventDefault();
-  updateMeasurementUnit();
   updateSearchLocation();
+  updateMeasurementUnit();
   const weatherData = await prepareWeatherData();
   displayCurrentDate();
   setWeatherIcon(weatherData);
   displayCurrentWeather(weatherData);
   resetForecastDashboard();
   displayAndGenerateForecasts(weatherData);
+  displayContentAndHideLoader();
 };
 
 const loadDefaultState = async () => {
@@ -226,6 +275,7 @@ const loadDefaultState = async () => {
   setWeatherIcon(weatherData);
   displayCurrentWeather(weatherData);
   displayAndGenerateForecasts(weatherData);
+  displayContentAndHideLoader();
 };
 
 const locationSearchForm = document.querySelector(".location-search-form");
