@@ -89,16 +89,19 @@ body {
 }
 
 .current-weather-container,
-.forecast-container,
+.hourly-forecast-container,
+.daily-forecast-container,
 .current-weather-dashboard,
-.forecast-dashboard {
+.hourly-forecast-dashboard,
+.daily-forecast-dashboard {
   display: grid;
   gap: 10px;
   padding: 10px 20px;
 }
 
 .current-weather-title,
-.forecast-title {
+.hourly-forecast-title,
+.daily-forecast-title {
   padding: 0 30px;
 }
 
@@ -106,21 +109,22 @@ body {
   grid-template-columns: 1fr 1fr;
 }
 
-.forecast-dashboard {
+.hourly-forecast-dashboard {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.daily-forecast-dashboard {
   grid-template-columns: repeat(7, 1fr);
 }
 
 .current-weather,
-.forecast-card {
+.hourly-forecast-card,
+.daily-forecast-card {
   padding: 10px;
 }
 
 .current-weather {
   line-height: 1.5;
-}
-
-.current-weather.main-info {
-  border-right: 1px solid;
 }
 
 .location {
@@ -158,11 +162,13 @@ body {
 .temperature,
 .conditions,
 .weather-detail-title,
-.forecast-title {
+.hourly-forecast-title,
+.daily-forecast-title {
   font-weight: normal;
 }
 
 .weather-icon {
+  display: block;
   width: 200px;
 }
 
@@ -172,7 +178,8 @@ body {
   text-align: center;
 }
 
-.forecast-card {
+.hourly-forecast-card,
+.daily-forecast-card {
   line-height: 2;
 }
 

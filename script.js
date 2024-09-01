@@ -56,11 +56,23 @@ const setSpeedUnit = () => {
   return speedUnit;
 };
 
+const formatTimeWithoutSeconds = (currentTime) => {
+  let time = currentTime.split(":");
+  let formattedTime = `${time[0]}:${time[1]}`;
+  return formattedTime;
+};
+
+const formatDateToDDMMYY = (currentDate) => {
+  let date = currentDate.split("-");
+  let formattedDate = `${date[2]}/${date[1]}/${date[0].slice(2)}`;
+  return formattedDate;
+};
+
 const displayLoaderAndHideContent = () => {
   const main = document.querySelector(".main");
-  main.style.display = "none";
-
   const loaderContainer = document.querySelector(".loader-container");
+
+  main.style.display = "none";
   loaderContainer.style.display = "flex";
 };
 
@@ -170,89 +182,122 @@ const displayCurrentDate = () => {
 
 const displayCurrentWeather = async (weatherData) => {
   const location = document.querySelector(".location");
-  location.innerHTML = weatherData.resolvedAddress;
-
   const description = document.querySelector(".description");
-  description.innerHTML = weatherData.description;
-
   const conditions = document.querySelector(".conditions");
-  conditions.innerHTML = weatherData.conditions;
-
   const dateTime = document.querySelector(".date-time");
-  dateTime.innerHTML = weatherData.dateTime;
-
   const dewPoint = document.querySelector(".dew-point");
-  const degreeSymbol = setDegreeSymbol();
-  dewPoint.innerHTML = `${weatherData.dew} ${degreeSymbol}`;
-
   const feelsLike = document.querySelector(".feels-like");
-  feelsLike.innerHTML = `${weatherData.feelsLike} ${degreeSymbol}`;
-
   const humidity = document.querySelector(".humidity");
-  humidity.innerHTML = `${weatherData.humidity}%`;
-
   const pressure = document.querySelector(".pressure");
-  const pressureUnit = setPressureUnit();
-  pressure.innerHTML = `${weatherData.pressure} ${pressureUnit}`;
-
   const temperature = document.querySelector(".temperature");
-  temperature.innerHTML = `${weatherData.temp} ${degreeSymbol}`;
-
   const visibility = document.querySelector(".visibility");
-  const distanceUnit = setDistanceUnit();
-  visibility.innerHTML = `${weatherData.visibility} ${distanceUnit}`;
-
   const windSpeed = document.querySelector(".wind-speed");
-  const speedUnit = setSpeedUnit();
-  windSpeed.innerHTML = `${weatherData.windSpeed} ${speedUnit}`;
-
   const sunrise = document.querySelector(".sunrise");
-  sunrise.innerHTML = weatherData.sunrise;
-
   const sunset = document.querySelector(".sunset");
-  sunset.innerHTML = weatherData.sunset;
+
+  const degreeSymbol = setDegreeSymbol();
+  const pressureUnit = setPressureUnit();
+  const distanceUnit = setDistanceUnit();
+  const speedUnit = setSpeedUnit();
+
+  location.innerHTML = weatherData.resolvedAddress;
+  description.innerHTML = weatherData.description;
+  conditions.innerHTML = weatherData.conditions;
+  dateTime.innerHTML = `${formatTimeWithoutSeconds(weatherData.dateTime)}`;
+  dewPoint.innerHTML = `${weatherData.dew} ${degreeSymbol}`;
+  feelsLike.innerHTML = `${weatherData.feelsLike} ${degreeSymbol}`;
+  humidity.innerHTML = `${weatherData.humidity}%`;
+  pressure.innerHTML = `${weatherData.pressure} ${pressureUnit}`;
+  temperature.innerHTML = `${weatherData.temp} ${degreeSymbol}`;
+  visibility.innerHTML = `${weatherData.visibility} ${distanceUnit}`;
+  windSpeed.innerHTML = `${weatherData.windSpeed} ${speedUnit}`;
+  sunrise.innerHTML = `${formatTimeWithoutSeconds(weatherData.sunrise)}`;
+  sunset.innerHTML = `${formatTimeWithoutSeconds(weatherData.sunset)}`;
 };
 
-const resetForecastDashboard = () => {
-  const forecastDashboard = document.querySelector(".forecast-dashboard");
-  forecastDashboard.innerHTML = "";
+const resetForecastDashboards = () => {
+  const hourlyForecastDashboard = document.querySelector(
+    ".hourly-forecast-dashboard"
+  );
+  const dailyForecastDashboard = document.querySelector(
+    ".daily-forecast-dashboard"
+  );
+
+  hourlyForecastDashboard.innerHTML = "";
+  dailyForecastDashboard.innerHTML = "";
 };
 
-const displayAndGenerateForecasts = async (weatherData) => {
-  const forecastDashboard = document.querySelector(".forecast-dashboard");
+const displayAndGenerateHourlyForecasts = async (weatherData) => {
+  const hourlyForecastDashboard = document.querySelector(
+    ".hourly-forecast-dashboard"
+  );
+
+  weatherData.days[0].hours.forEach((hour, index) => {
+    if (index < 24) {
+      const hourlyForecastCard = document.createElement("div");
+      const dateTime = document.createElement("h4");
+      const temperature = document.createElement("h4");
+      const conditions = document.createElement("h4");
+
+      const degreeSymbol = setDegreeSymbol();
+
+      hourlyForecastCard.classList.add("hourly-forecast-card");
+      dateTime.classList.add("date-time");
+      temperature.classList.add("temperature");
+      conditions.classList.add("conditions");
+
+      dateTime.innerHTML = `<i class="fa-regular fa-clock"></i> - ${formatTimeWithoutSeconds(
+        hour.datetime
+      )}`;
+      temperature.innerHTML = `<i class="fa-solid fa-temperature-half"></i> - ${hour.temp} ${degreeSymbol}`;
+      conditions.innerHTML = `<i class="fa-solid fa-cloud"></i> - ${hour.conditions}`;
+
+      hourlyForecastCard.appendChild(dateTime);
+      hourlyForecastCard.appendChild(temperature);
+      hourlyForecastCard.appendChild(conditions);
+      hourlyForecastDashboard.appendChild(hourlyForecastCard);
+    }
+  });
+};
+
+const displayAndGenerateDailyForecasts = async (weatherData) => {
+  const dailyForecastDashboard = document.querySelector(
+    ".daily-forecast-dashboard"
+  );
 
   weatherData.days.forEach((day, index) => {
     if (index > 0 && index < 15) {
-      const forecastCard = document.createElement("div");
-      forecastCard.classList.add("forecast-card");
-
+      const dailyForecastCard = document.createElement("div");
       const dateTime = document.createElement("h4");
-      dateTime.classList.add("date-time");
-      dateTime.innerHTML = `<i class="fa-regular fa-calendar"></i> - ${day.datetime}`;
-
       const temperature = document.createElement("h4");
-      temperature.classList.add("temperature");
-      const degreeSymbol = setDegreeSymbol();
-      temperature.innerHTML = `<i class="fa-solid fa-temperature-half"></i> - ${day.temp} ${degreeSymbol}`;
-
       const conditions = document.createElement("h4");
+
+      const degreeSymbol = setDegreeSymbol();
+
+      dailyForecastCard.classList.add("daily-forecast-card");
+      dateTime.classList.add("date-time");
+      temperature.classList.add("temperature");
       conditions.classList.add("conditions");
+
+      dateTime.innerHTML = `<i class="fa-regular fa-calendar"></i> - ${formatDateToDDMMYY(
+        day.datetime
+      )}`;
+      temperature.innerHTML = `<i class="fa-solid fa-temperature-half"></i> - ${day.temp} ${degreeSymbol}`;
       conditions.innerHTML = `<i class="fa-solid fa-cloud"></i> - ${day.conditions}`;
 
-      forecastCard.appendChild(dateTime);
-      forecastCard.appendChild(temperature);
-      forecastCard.appendChild(conditions);
-
-      forecastDashboard.appendChild(forecastCard);
+      dailyForecastCard.appendChild(dateTime);
+      dailyForecastCard.appendChild(temperature);
+      dailyForecastCard.appendChild(conditions);
+      dailyForecastDashboard.appendChild(dailyForecastCard);
     }
   });
 };
 
 const displayContentAndHideLoader = () => {
   const loaderContainer = document.querySelector(".loader-container");
-  loaderContainer.style.display = "none";
-
   const main = document.querySelector(".main");
+
+  loaderContainer.style.display = "none";
   main.style.display = "flex";
 };
 
@@ -264,8 +309,9 @@ const handleFormSubmit = async (event) => {
   displayCurrentDate();
   setWeatherIcon(weatherData);
   displayCurrentWeather(weatherData);
-  resetForecastDashboard();
-  displayAndGenerateForecasts(weatherData);
+  resetForecastDashboards();
+  displayAndGenerateHourlyForecasts(weatherData);
+  displayAndGenerateDailyForecasts(weatherData);
   displayContentAndHideLoader();
 };
 
@@ -274,7 +320,8 @@ const loadDefaultState = async () => {
   displayCurrentDate();
   setWeatherIcon(weatherData);
   displayCurrentWeather(weatherData);
-  displayAndGenerateForecasts(weatherData);
+  displayAndGenerateHourlyForecasts(weatherData);
+  displayAndGenerateDailyForecasts(weatherData);
   displayContentAndHideLoader();
 };
 
