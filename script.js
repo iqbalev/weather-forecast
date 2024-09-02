@@ -301,31 +301,29 @@ const displayContentAndHideLoader = () => {
   main.style.display = "flex";
 };
 
-const handleFormSubmit = async (event) => {
-  event.preventDefault();
-  updateSearchLocation();
-  updateMeasurementUnit();
-  const weatherData = await prepareWeatherData();
+const updateUI = (weatherData) => {
   displayCurrentDate();
   setWeatherIcon(weatherData);
   displayCurrentWeather(weatherData);
   resetForecastDashboards();
   displayAndGenerateHourlyForecasts(weatherData);
   displayAndGenerateDailyForecasts(weatherData);
-  displayContentAndHideLoader();
 };
 
 const loadDefaultState = async () => {
   const weatherData = await prepareWeatherData();
-  displayCurrentDate();
-  setWeatherIcon(weatherData);
-  displayCurrentWeather(weatherData);
-  displayAndGenerateHourlyForecasts(weatherData);
-  displayAndGenerateDailyForecasts(weatherData);
-  displayContentAndHideLoader();
+  updateUI(weatherData);
 };
+
+const handleFormSubmit = async (event) => {
+  event.preventDefault();
+  updateSearchLocation();
+  updateMeasurementUnit();
+  const weatherData = await prepareWeatherData();
+  updateUI(weatherData);
+};
+
+document.addEventListener("DOMContentLoaded", loadDefaultState);
 
 const locationSearchForm = document.querySelector(".location-search-form");
 locationSearchForm.addEventListener("submit", handleFormSubmit);
-
-document.addEventListener("DOMContentLoaded", loadDefaultState);
