@@ -2,7 +2,7 @@ let searchLocation = "Bandung";
 let measurementUnit = "metric";
 const apiKey = "G8796BZ69XEMGGGRH42HX5RSQ";
 
-const fetchWeatherData = async (searchLocation, measurementUnit) => {
+const fetchWeatherData = async () => {
   displayLoaderAndHideContent();
 
   try {
@@ -56,15 +56,15 @@ const setSpeedUnit = () => {
   return speedUnit;
 };
 
-const formatTimeWithoutSeconds = (currentTime) => {
-  let time = currentTime.split(":");
-  let formattedTime = `${time[0]}:${time[1]}`;
+const formatTimeWithoutSeconds = (timeInput) => {
+  const time = timeInput.split(":");
+  const formattedTime = `${time[0]}:${time[1]}`;
   return formattedTime;
 };
 
-const formatDateToDDMMYY = (currentDate) => {
-  let date = currentDate.split("-");
-  let formattedDate = `${date[2]}/${date[1]}/${date[0].slice(2)}`;
+const formatDateToDDMMYY = (dateInput) => {
+  const date = dateInput.split("-");
+  const formattedDate = `${date[2]}-${date[1]}-${date[0].slice(2)}`;
   return formattedDate;
 };
 
@@ -73,11 +73,11 @@ const displayLoaderAndHideContent = () => {
   const loaderContainer = document.querySelector(".loader-container");
 
   main.style.display = "none";
-  loaderContainer.style.display = "flex";
+  loaderContainer.style.display = "grid";
 };
 
 const prepareWeatherData = async () => {
-  const weatherData = await fetchWeatherData(searchLocation, measurementUnit);
+  const weatherData = await fetchWeatherData();
 
   const resolvedAddress = weatherData.resolvedAddress;
   const description = weatherData.description;
@@ -114,7 +114,7 @@ const prepareWeatherData = async () => {
   };
 };
 
-const setWeatherIcon = (weatherData) => {
+const setWeatherIcon = (weatherIconName) => {
   const weatherIconMapping = {
     "clear-day": "assets/clear-day.svg",
     "clear-night": "assets/clear-night.svg",
@@ -141,34 +141,26 @@ const setWeatherIcon = (weatherData) => {
   };
 
   const weatherIcon = document.querySelector(".weather-icon");
-  weatherIcon.src = weatherIconMapping[weatherData.icon] || "";
+  weatherIcon.src = weatherIconMapping[weatherIconName.icon] || "";
 };
 
 const displayCurrentDate = () => {
   const currentDate = new Date();
-  const daysOfTheWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+  const daysOfTheWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   const monthsOfTheYear = [
-    "January",
-    "February",
-    "March",
-    "April",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
     "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
   ];
 
   const todayDay = daysOfTheWeek[currentDate.getDay()];
@@ -180,7 +172,7 @@ const displayCurrentDate = () => {
   dayMonthYear.innerHTML = `${todayDay}, ${todayDate} ${todayMonth} ${todayYear}`;
 };
 
-const displayCurrentWeather = async (weatherData) => {
+const displayCurrentWeather = async (currentWeatherData) => {
   const location = document.querySelector(".location");
   const description = document.querySelector(".description");
   const conditions = document.querySelector(".conditions");
@@ -200,19 +192,21 @@ const displayCurrentWeather = async (weatherData) => {
   const distanceUnit = setDistanceUnit();
   const speedUnit = setSpeedUnit();
 
-  location.innerHTML = weatherData.resolvedAddress;
-  description.innerHTML = weatherData.description;
-  conditions.innerHTML = weatherData.conditions;
-  dateTime.innerHTML = `${formatTimeWithoutSeconds(weatherData.dateTime)}`;
-  dewPoint.innerHTML = `${weatherData.dew} ${degreeSymbol}`;
-  feelsLike.innerHTML = `${weatherData.feelsLike} ${degreeSymbol}`;
-  humidity.innerHTML = `${weatherData.humidity}%`;
-  pressure.innerHTML = `${weatherData.pressure} ${pressureUnit}`;
-  temperature.innerHTML = `${weatherData.temp} ${degreeSymbol}`;
-  visibility.innerHTML = `${weatherData.visibility} ${distanceUnit}`;
-  windSpeed.innerHTML = `${weatherData.windSpeed} ${speedUnit}`;
-  sunrise.innerHTML = `${formatTimeWithoutSeconds(weatherData.sunrise)}`;
-  sunset.innerHTML = `${formatTimeWithoutSeconds(weatherData.sunset)}`;
+  location.innerHTML = currentWeatherData.resolvedAddress;
+  description.innerHTML = currentWeatherData.description;
+  conditions.innerHTML = currentWeatherData.conditions;
+  dateTime.innerHTML = `${formatTimeWithoutSeconds(
+    currentWeatherData.dateTime
+  )}`;
+  dewPoint.innerHTML = `${currentWeatherData.dew} ${degreeSymbol}`;
+  feelsLike.innerHTML = `${currentWeatherData.feelsLike} ${degreeSymbol}`;
+  humidity.innerHTML = `${currentWeatherData.humidity}%`;
+  pressure.innerHTML = `${currentWeatherData.pressure} ${pressureUnit}`;
+  temperature.innerHTML = `${currentWeatherData.temp} ${degreeSymbol}`;
+  visibility.innerHTML = `${currentWeatherData.visibility} ${distanceUnit}`;
+  windSpeed.innerHTML = `${currentWeatherData.windSpeed} ${speedUnit}`;
+  sunrise.innerHTML = `${formatTimeWithoutSeconds(currentWeatherData.sunrise)}`;
+  sunset.innerHTML = `${formatTimeWithoutSeconds(currentWeatherData.sunset)}`;
 };
 
 const resetForecastDashboards = () => {
@@ -227,12 +221,12 @@ const resetForecastDashboards = () => {
   dailyForecastDashboard.innerHTML = "";
 };
 
-const displayAndGenerateHourlyForecasts = async (weatherData) => {
+const displayAndGenerateHourlyForecasts = async (hourlyWeatherData) => {
   const hourlyForecastDashboard = document.querySelector(
     ".hourly-forecast-dashboard"
   );
 
-  weatherData.days[0].hours.forEach((hour, index) => {
+  hourlyWeatherData.days[0].hours.forEach((hour, index) => {
     if (index < 24) {
       const hourlyForecastCard = document.createElement("div");
       const dateTime = document.createElement("h4");
@@ -246,11 +240,11 @@ const displayAndGenerateHourlyForecasts = async (weatherData) => {
       temperature.classList.add("temperature");
       conditions.classList.add("conditions");
 
-      dateTime.innerHTML = `<i class="fa-regular fa-clock"></i> - ${formatTimeWithoutSeconds(
+      dateTime.innerHTML = `<i class="fa-regular fa-clock"></i> ${formatTimeWithoutSeconds(
         hour.datetime
       )}`;
-      temperature.innerHTML = `<i class="fa-solid fa-temperature-half"></i> - ${hour.temp} ${degreeSymbol}`;
-      conditions.innerHTML = `<i class="fa-solid fa-cloud"></i> - ${hour.conditions}`;
+      temperature.innerHTML = `<i class="fa-solid fa-temperature-half"></i> ${hour.temp} ${degreeSymbol}`;
+      conditions.innerHTML = `<i class="fa-regular fa-sun"></i> ${hour.conditions}`;
 
       hourlyForecastCard.appendChild(dateTime);
       hourlyForecastCard.appendChild(temperature);
@@ -260,12 +254,12 @@ const displayAndGenerateHourlyForecasts = async (weatherData) => {
   });
 };
 
-const displayAndGenerateDailyForecasts = async (weatherData) => {
+const displayAndGenerateDailyForecasts = async (dailyWeatherData) => {
   const dailyForecastDashboard = document.querySelector(
     ".daily-forecast-dashboard"
   );
 
-  weatherData.days.forEach((day, index) => {
+  dailyWeatherData.days.forEach((day, index) => {
     if (index > 0 && index < 15) {
       const dailyForecastCard = document.createElement("div");
       const dateTime = document.createElement("h4");
@@ -279,11 +273,11 @@ const displayAndGenerateDailyForecasts = async (weatherData) => {
       temperature.classList.add("temperature");
       conditions.classList.add("conditions");
 
-      dateTime.innerHTML = `<i class="fa-regular fa-calendar"></i> - ${formatDateToDDMMYY(
+      dateTime.innerHTML = `<i class="fa-regular fa-calendar"></i> ${formatDateToDDMMYY(
         day.datetime
       )}`;
-      temperature.innerHTML = `<i class="fa-solid fa-temperature-half"></i> - ${day.temp} ${degreeSymbol}`;
-      conditions.innerHTML = `<i class="fa-solid fa-cloud"></i> - ${day.conditions}`;
+      temperature.innerHTML = `<i class="fa-solid fa-temperature-half"></i> ${day.temp} ${degreeSymbol}`;
+      conditions.innerHTML = `<i class="fa-regular fa-sun"></i> ${day.conditions}`;
 
       dailyForecastCard.appendChild(dateTime);
       dailyForecastCard.appendChild(temperature);
@@ -298,16 +292,16 @@ const displayContentAndHideLoader = () => {
   const main = document.querySelector(".main");
 
   loaderContainer.style.display = "none";
-  main.style.display = "flex";
+  main.style.display = "grid";
 };
 
-const updateUI = (weatherData) => {
+const updateUI = (weatherDetails) => {
   displayCurrentDate();
-  setWeatherIcon(weatherData);
-  displayCurrentWeather(weatherData);
+  setWeatherIcon(weatherDetails);
+  displayCurrentWeather(weatherDetails);
   resetForecastDashboards();
-  displayAndGenerateHourlyForecasts(weatherData);
-  displayAndGenerateDailyForecasts(weatherData);
+  displayAndGenerateHourlyForecasts(weatherDetails);
+  displayAndGenerateDailyForecasts(weatherDetails);
 };
 
 const loadDefaultState = async () => {
@@ -315,8 +309,8 @@ const loadDefaultState = async () => {
   updateUI(weatherData);
 };
 
-const handleFormSubmit = async (event) => {
-  event.preventDefault();
+const handleFormSubmit = async (submitEvent) => {
+  submitEvent.preventDefault();
   updateSearchLocation();
   updateMeasurementUnit();
   const weatherData = await prepareWeatherData();
