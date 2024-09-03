@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weather Forecast | by Iqbalev</title>
+    <title>climaScope | A Weather App</title>
     <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap"
       rel="stylesheet"
     />
     <link
@@ -21,102 +21,108 @@
   </head>
 
   <body>
-    <header class="header">
-      <h1 class="app-title">WeatherForecast</h1>
-      <form class="location-search-form">
-        <input
-          type="search"
-          name="location"
-          class="location-search-input"
-          placeholder="Search location"
-          required
-        />
-        <select class="measurement-unit-selector">
-          <option value="metric">Metric (°C, km/h)</option>
-          <option value="uk">Hybrid (°C, mph)</option>
-          <option value="us">Imperial (°F, mph)</option>
-        </select>
-        <button type="submit" class="search-button">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-      </form>
-    </header>
+    <div class="wrapper">
+      <header class="header">
+        <h1 class="app-name"><span>clima</span>Scope</h1>
+        <form class="location-search-form">
+          <input
+            type="search"
+            name="location"
+            class="location-search-input"
+            placeholder="Search location"
+            required
+          />
+          <select class="measurement-unit-selector">
+            <option value="metric">Metric (°C, km/h)</option>
+            <option value="uk">Hybrid (°C, mph)</option>
+            <option value="us">Imperial (°F, mph)</option>
+          </select>
+          <button type="submit" class="search-button">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </form>
+      </header>
 
-    <div class="loader-container">
-      <p class="loader-description">Please wait. Gathering weather data...</p>
-      <div class="loader-animation"></div>
+      <div class="loader-container">
+        <p class="loader-description">Gathering weather data...</p>
+        <div class="loader-animation"></div>
+      </div>
+
+      <main class="main">
+        <section class="current-weather-container">
+          <h2 class="current-weather-title">Current Weather</h2>
+          <div class="current-weather-dashboard">
+            <div class="current-weather main-info">
+              <div class="date-location">
+                <h3 class="location"></h3>
+                <h3 class="day-month-year"></h3>
+              </div>
+
+              <div class="weather-info">
+                <img class="weather-icon" />
+                <div class="temperature-conditions-description">
+                  <h3 class="temperature"></h3>
+                  <h3 class="conditions"></h3>
+                  <p class="description"></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="current-weather additional-info">
+              <div class="weather-details-grid">
+                <div class="weather-detail-card">
+                  <h4 class="weather-detail-title">Feels Like</h4>
+                  <p class="feels-like"></p>
+                </div>
+                <div class="weather-detail-card">
+                  <h4 class="weather-detail-title">Humidity</h4>
+                  <p class="humidity"></p>
+                </div>
+                <div class="weather-detail-card">
+                  <h4 class="weather-detail-title">Dew Point</h4>
+                  <p class="dew-point"></p>
+                </div>
+                <div class="weather-detail-card">
+                  <h4 class="weather-detail-title">Wind Speed</h4>
+                  <p class="wind-speed"></p>
+                </div>
+                <div class="weather-detail-card">
+                  <h4 class="weather-detail-title">Visibility</h4>
+                  <p class="visibility"></p>
+                </div>
+                <div class="weather-detail-card">
+                  <h4 class="weather-detail-title">Pressure</h4>
+                  <p class="pressure"></p>
+                </div>
+                <div class="weather-detail-card">
+                  <h4 class="weather-detail-title">Time</h4>
+                  <p class="date-time"></p>
+                </div>
+                <div class="weather-detail-card">
+                  <h4 class="weather-detail-title">Sunrise</h4>
+                  <p class="sunrise"></p>
+                </div>
+                <div class="weather-detail-card">
+                  <h4 class="weather-detail-title">Sunset</h4>
+                  <p class="sunset"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="hourly-forecast-container">
+          <h2 class="hourly-forecast-title">Hourly Forecast</h2>
+          <div class="hourly-forecast-dashboard"></div>
+        </section>
+
+        <section class="daily-forecast-container">
+          <h2 class="daily-forecast-title">Daily Forecast</h2>
+          <div class="daily-forecast-dashboard"></div>
+        </section>
+      </main>
     </div>
 
-    <main class="main">
-      <section class="current-weather-container">
-        <h2 class="current-weather-title">Current Weather</h2>
-        <div class="current-weather-dashboard">
-          <div class="current-weather main-info">
-            <h3 class="day-month-year"></h3>
-            <h3 class="location"></h3>
-            <div class="weather-info">
-              <img class="weather-icon" />
-              <div class="temperature-conditions">
-                <h3 class="temperature"></h3>
-                <h3 class="conditions"></h3>
-              </div>
-            </div>
-          </div>
-
-          <div class="current-weather additional-info">
-            <div class="weather-details-grid">
-              <div class="weather-detail-card">
-                <h4 class="weather-detail-title">Feels Like</h4>
-                <p class="feels-like"></p>
-              </div>
-              <div class="weather-detail-card">
-                <h4 class="weather-detail-title">Humidity</h4>
-                <p class="humidity"></p>
-              </div>
-              <div class="weather-detail-card">
-                <h4 class="weather-detail-title">Dew Point</h4>
-                <p class="dew-point"></p>
-              </div>
-              <div class="weather-detail-card">
-                <h4 class="weather-detail-title">Wind Speed</h4>
-                <p class="wind-speed"></p>
-              </div>
-              <div class="weather-detail-card">
-                <h4 class="weather-detail-title">Visibility</h4>
-                <p class="visibility"></p>
-              </div>
-              <div class="weather-detail-card">
-                <h4 class="weather-detail-title">Pressure</h4>
-                <p class="pressure"></p>
-              </div>
-              <div class="weather-detail-card">
-                <h4 class="weather-detail-title">Time</h4>
-                <p class="date-time"></p>
-              </div>
-              <div class="weather-detail-card">
-                <h4 class="weather-detail-title">Sunrise</h4>
-                <p class="sunrise"></p>
-              </div>
-              <div class="weather-detail-card">
-                <h4 class="weather-detail-title">Sunset</h4>
-                <p class="sunset"></p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <p class="description"></p>
-      </section>
-
-      <section class="hourly-forecast-container">
-        <h2 class="hourly-forecast-title">Hourly Forecast</h2>
-        <div class="hourly-forecast-dashboard"></div>
-      </section>
-
-      <section class="daily-forecast-container">
-        <h2 class="daily-forecast-title">Daily Forecast</h2>
-        <div class="daily-forecast-dashboard"></div>
-      </section>
-    </main>
     <script src="script.js"></script>
   </body>
 </html>
